@@ -190,3 +190,5 @@ if __name__ == "__main__":
             print(f" - {item['name']} (waga {item['weight']}, wartość {item['value']})")
             total_weight += item["weight"]
     print("Łączna waga:", total_weight)
+
+input("\nNaciśnij Enter, aby zakończyć.")
