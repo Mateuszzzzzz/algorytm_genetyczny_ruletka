@@ -161,3 +161,4 @@ if __name__ == "__main__":
             total_weight += item["weight"]
 
     print("Łączna waga:", total_weight)
+    print("Najlepszy chromosom: ", best_chrom)
