@@ -127,7 +127,7 @@ def genetic_algorithm(items, capacity, population_size=50, generations=200,
             if fit > best_fitness:
                 best_fitness = fit
                 best_solution = chrom
-                population_best = fit
+
             if fit>population_best:
                 population_best = fit
 
