@@ -3,12 +3,28 @@ import random
 #wprowadzanie przedmitow przez uzytkownika
 def load_items_from_user():
     items = []
-    print("Wprowadzaj przedmioty. Wpisz 'stop' jako nazwę, aby zakończyć.\n")
+    print("Wpisz 'stop' jako nazwę, aby zakończyć dodwanie przedmiotów. Wpisz 'generuj' jako nazwę przedmiotu, aby automatycznie stworzyć przedmioty.\n")
 
     while True:
         name = input("Nazwa przedmiotu: ")
         if name.lower() == "stop":
             break
+        if name.lower() == "generuj":
+            dolna_waga = int(input("Najmniejsza waga dla przedmiotu: "))
+            górna_waga = int(input("Największa waga dla przedmiotu: "))
+            dolna_wartość = int(input("Najmniejsza wartość dla przedmiotu: "))
+            górna_wartość = int(input("Największa wartość dla przedmiotu: "))
+            ile_przedmiotów = int(input("Ile przedmiotów wygenerować: "))
+
+            for i in range(1, ile_przedmiotów + 1):
+                items.append({
+                    "name": f"Przedmiot_ID_{i}",
+                    "weight": int(random.uniform(dolna_waga, górna_waga)),
+                    "value": int(random.uniform(dolna_wartość, górna_wartość))
+                })
+
+            print(f"\nWygenerowano {ile_przedmiotów} przedmiotów!\n")
+            continue
 
         try:
             weight = float(input("Waga: "))
@@ -92,13 +108,14 @@ def mutate(chromosome, mutation_rate):
 
 #algorytm genetyczny
 def genetic_algorithm(items, capacity, population_size=50, generations=200,
-                      crossover_rate=0.8, mutation_rate=0.02, #tu jest 0.02, bo nie dzialalo sensownie z mutation_rate 0.2 (mozna zmienic na 0.2, jesli bylaby taka potrzeba)
+                      crossover_rate=0.8, mutation_rate=0.2,
                       print_every=1):
     gene_count = len(items)
     population = create_initial_population(population_size, gene_count)
 
     best_solution = None
     best_fitness = -1
+    bet_generation_number = 0
 
     for gen in range(generations):
         population_best = 0
@@ -127,14 +144,13 @@ def genetic_algorithm(items, capacity, population_size=50, generations=200,
             if fit > best_fitness:
                 best_fitness = fit
                 best_solution = chrom
-
+                best_generation_number = gen
             if fit>population_best:
                 population_best = fit
 
         if gen % print_every == 0:
-            print(f"Pokolenie numer: {gen} - Najlepszy fitness tego pokolenia: {population_best} - Najlepszy fitness ogólny: {best_fitness}")
-
-    return best_solution, best_fitness
+            print(f"Pokolenie numer: {gen} - Najlepszy fitness tego pokolenia: {population_best}. Najlepsze pokolenie ogólnie: {best_generation_number} - Najlepszy fitness ogólny: {best_fitness}")
+    return best_solution, best_fitness, best_generation_number
 
 
 #start programu
@@ -161,10 +177,11 @@ if __name__ == "__main__":
     except ValueError:
         print_how = 1
 
-    best_chrom, best_fit = genetic_algorithm(items, capacity, generations=how_many_generations, print_every=print_how)
+    best_chrom, best_fit, best_gen = genetic_algorithm(items, capacity, generations=how_many_generations, print_every=print_how)
 
     print("\nWYNIK:")
     print("Najlepszy chromosom: ", best_chrom)
+    print("Najlepsze pokolenie: ", best_gen)
     print("Najlepszy fitness:", best_fit)
     print("Wybrane przedmioty:")
     total_weight = 0
