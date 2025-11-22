@@ -190,5 +190,7 @@ if __name__ == "__main__":
             print(f" - {item['name']} (waga {item['weight']}, wartość {item['value']})")
             total_weight += item["weight"]
     print("Łączna waga:", total_weight)
+    if total_weight > capacity:
+        print("Uwaga! Nie znaleziono chromosomu spełniajacego wymagania plecaka.")
 
 input("\nNaciśnij Enter, aby zakończyć.")
