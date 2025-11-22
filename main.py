@@ -164,15 +164,12 @@ if __name__ == "__main__":
     best_chrom, best_fit = genetic_algorithm(items, capacity, generations=how_many_generations, print_every=print_how)
 
     print("\nWYNIK:")
+    print("Najlepszy chromosom: ", best_chrom)
     print("Najlepszy fitness:", best_fit)
     print("Wybrane przedmioty:")
-
     total_weight = 0
-
     for gene, item in zip(best_chrom, items):
         if gene == 1:
             print(f" - {item['name']} (waga {item['weight']}, wartość {item['value']})")
             total_weight += item["weight"]
-
     print("Łączna waga:", total_weight)
-    print("Najlepszy chromosom: ", best_chrom)
