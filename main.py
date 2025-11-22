@@ -26,7 +26,7 @@ def load_items_from_user():
     return items
 
 
-#funckja fitness dla chromosomow
+#funckja fitness dla wszystkich chromosomow
 def fitness(chromosome, items, capacity):
     total_weight = 0
     total_value = 0
@@ -92,7 +92,8 @@ def mutate(chromosome, mutation_rate):
 
 #algorytm genetyczny
 def genetic_algorithm(items, capacity, population_size=50, generations=200,
-                      crossover_rate=0.8, mutation_rate=0.02): #tu jest 0.02, bo nie dzialalo sensownie z mutation_rate 0.2 aok
+                      crossover_rate=0.8, mutation_rate=0.02, #tu jest 0.02, bo nie dzialalo sensownie z mutation_rate 0.2 (mozna zmienic na 0.2, jesli bylaby taka potrzeba)
+                      print_every=1):
     gene_count = len(items)
     population = create_initial_population(population_size, gene_count)
 
@@ -100,6 +101,7 @@ def genetic_algorithm(items, capacity, population_size=50, generations=200,
     best_fitness = -1
 
     for gen in range(generations):
+        population_best = 0
         new_population = []
 
         while len(new_population) < population_size:
@@ -120,15 +122,17 @@ def genetic_algorithm(items, capacity, population_size=50, generations=200,
                 new_population.append(child2)
 
         population = new_population
-
         for chrom in population:
             fit = fitness(chrom, items, capacity)
             if fit > best_fitness:
                 best_fitness = fit
                 best_solution = chrom
+                population_best = fit
+            if fit>population_best:
+                population_best = fit
 
-        if gen % 10 == 0:
-            print(f"Pokolenie {gen} — najlepszy fitness: {best_fitness}")
+        if gen % print_every == 0:
+            print(f"Pokolenie numer: {gen} - Najlepszy fitness tego pokolenia: {population_best} - Najlepszy fitness ogólny: {best_fitness}")
 
     return best_solution, best_fitness
 
@@ -147,7 +151,17 @@ if __name__ == "__main__":
         print("Błąd: pojemność musi być liczbą.")
         exit()
 
-    best_chrom, best_fit = genetic_algorithm(items, capacity)
+    try:
+        how_many_generations = int(input("\nPodaj liczbę generacji (domyślnie 200): ") or 200)
+    except ValueError:
+        how_many_generations = 200
+
+    try:
+        print_how = int(input("Co ile generacji program ma pokazywać wynik (domyślnie co każdą generację): ") or 1)
+    except ValueError:
+        print_how = 1
+
+    best_chrom, best_fit = genetic_algorithm(items, capacity, generations=how_many_generations, print_every=print_how)
 
     print("\nWYNIK:")
     print("Najlepszy fitness:", best_fit)
